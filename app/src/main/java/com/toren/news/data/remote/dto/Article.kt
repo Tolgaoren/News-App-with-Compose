@@ -1,6 +1,7 @@
 package com.toren.news.data.remote.dto
 
 import com.toren.news.domain.model.News
+import com.toren.news.util.TimeFormatter
 
 data class Article(
     val author: String?,
@@ -19,7 +20,7 @@ fun Article.toNews(): News {
         author ?: "",
         content ?: "",
         description ?: "",
-        publishedAt ?: "",
+        TimeFormatter.formatDateTime(publishedAt),
         source?.name ?: "",
         title ?: "",
         url ?: "",
