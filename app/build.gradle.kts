@@ -80,6 +80,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     kapt (libs.androidx.hilt.compiler)
     implementation (libs.androidx.hilt.navigation.compose)
-    implementation ("com.github.bumptech.glide:compose:1.0.0-beta01")
+    implementation (libs.compose)
 
 }

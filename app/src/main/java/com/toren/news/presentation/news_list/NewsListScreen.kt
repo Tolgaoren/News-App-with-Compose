@@ -92,6 +92,7 @@ fun NewsListScreen(
                 NewsListItem(
                     news = news,
                     onItemClick = {
+                        println(it)
                         navController.navigate(news)
                     }
                 )

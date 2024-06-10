@@ -1,14 +1,12 @@
 package com.toren.news.presentation.news_detail
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -27,18 +25,18 @@ fun NewsDetailScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 16.dp)
     ) {
-
-        GlideImage(
-            model = newsDetail.urlToImage,
-            contentDescription = "News Image",
-            modifier = Modifier.padding(
-                top = 16.dp,
-                start = 8.dp,
-                end = 8.dp)
-        )
-
+        if (newsDetail.urlToImage.isNotEmpty()) {
+            GlideImage(
+                model = newsDetail.urlToImage,
+                contentDescription = "News Image",
+                modifier = Modifier.padding(
+                    top = 4.dp,
+                    start = 8.dp,
+                    end = 8.dp
+                )
+            )
+        }
         Text(
             text = newsDetail.title,
             modifier = Modifier.padding(8.dp),
