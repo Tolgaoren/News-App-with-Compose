@@ -17,12 +17,12 @@ data class Article(
 fun Article.toNews(): News {
     return News(
         author ?: "",
-        content ?: "",
-        description ?: "",
+        content.toString() ?: "",
+        description.toString() ?: "",
         publishedAt ?: "",
-        source!!,
+        source?.name ?: "",
         title ?: "",
         url ?: "",
-        urlToImage ?: ""
+        urlToImage.toString() ?: ""
     )
 }

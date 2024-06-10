@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.toren.news.domain.model.News
@@ -18,9 +19,9 @@ import com.toren.news.domain.model.News
 @Composable
 fun NewsListItem(
     news: News,
-    onItemClick: (News) -> Unit
+    onItemClick: (News) -> Unit,
 ) {
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onItemClick(news) }
@@ -37,7 +38,13 @@ fun NewsListItem(
             )
 
             Text(
-                text = news.title)
+                text = news.title
+            )
+            Text(
+                text = news.publishedAt,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(4.dp)
+            )
 
         }
     }
