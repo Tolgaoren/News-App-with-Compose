@@ -81,6 +81,6 @@ dependencies {
     kapt (libs.androidx.hilt.compiler)
     implementation (libs.androidx.hilt.navigation.compose)
     implementation (libs.compose)
-    implementation ("com.jakewharton.threetenabp:threetenabp:1.3.1")
+    implementation (libs.threetenabp)
 
 }
