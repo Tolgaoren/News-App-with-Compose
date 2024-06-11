@@ -1,6 +1,7 @@
 package com.toren.news.data.remote.dto
 
 import com.toren.news.domain.model.News
+import com.toren.news.util.ContentFormatter
 import com.toren.news.util.TimeFormatter
 
 data class Article(
@@ -18,7 +19,7 @@ data class Article(
 fun Article.toNews(): News {
     return News(
         author ?: "",
-        content ?: "",
+        ContentFormatter.formatContent(content),
         description ?: "",
         TimeFormatter.formatDateTime(publishedAt),
         source?.name ?: "",

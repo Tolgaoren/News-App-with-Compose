@@ -1,11 +1,16 @@
 package com.toren.news.presentation.news_detail
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,15 +31,22 @@ fun NewsDetailScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(6.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = newsDetail.source,
+                style = MaterialTheme.typography.titleSmall
+            )
+        }
         if (newsDetail.urlToImage.isNotEmpty()) {
             GlideImage(
                 model = newsDetail.urlToImage,
                 contentDescription = "News Image",
-                modifier = Modifier.padding(
-                    top = 4.dp,
-                    start = 8.dp,
-                    end = 8.dp
-                )
+                modifier = Modifier.fillMaxWidth()
             )
         }
         Text(
@@ -42,7 +54,26 @@ fun NewsDetailScreen(
             modifier = Modifier.padding(8.dp),
             style = MaterialTheme.typography.headlineMedium
             )
-
+        Row (
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ){
+            Text(
+                text = newsDetail.publishedAt,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        Text(
+            text = newsDetail.description,
+            modifier = Modifier.padding(8.dp),
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Text(
+            text = newsDetail.content,
+            modifier = Modifier.padding(8.dp),
+            style = MaterialTheme.typography.bodyLarge)
     }
 }
 

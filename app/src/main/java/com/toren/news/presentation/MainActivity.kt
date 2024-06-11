@@ -38,8 +38,8 @@ class MainActivity : ComponentActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .statusBarsPadding()
-                            .navigationBarsPadding()
+                        //    .statusBarsPadding()
+                        //    .navigationBarsPadding()
                     ) {
                         val navController = rememberNavController()
                         NavHost(
