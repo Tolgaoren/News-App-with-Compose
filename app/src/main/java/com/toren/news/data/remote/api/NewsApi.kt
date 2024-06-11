@@ -11,6 +11,9 @@ interface NewsApi {
     @GET("/v2/top-headlines")
     suspend fun getTopHeadlines(@Query("country") country: String, @Query("apiKey") apiKey: String= "6a0e6799f91f45da8bbce836ba9a89d5"): NewsDto
 
+    @GET("/v2/top-headlines")
+    suspend fun getQuery(@Query ("q") query: String, @Query("apiKey") apiKey: String= "6a0e6799f91f45da8bbce836ba9a89d5"): NewsDto
+
     @GET("/v2/top-headlines?country=tr&category=business&apiKey=6a0e6799f91f45da8bbce836ba9a89d5")
     suspend fun getBusiness(): NewsDto
 
@@ -26,10 +29,7 @@ interface NewsApi {
     @GET("/v2/top-headlines?country=tr&category=science&apiKey=6a0e6799f91f45da8bbce836ba9a89d5")
     suspend fun getScience(): NewsDto
 
-    @GET("/v2/top-headlines?q={query}&apiKey=6a0e6799f91f45da8bbce836ba9a89d5")
-    suspend fun getQuery(@Path("query") query: String): NewsDto
-
     @GET("/v2/top-headlines?sources={source}-news&apiKey=6a0e6799f91f45da8bbce836ba9a89d5")
-    suspend fun getSource(@Path("source") source: String): NewsDto
+    suspend fun getSource(@Query("source") source: String): NewsDto
 
 }

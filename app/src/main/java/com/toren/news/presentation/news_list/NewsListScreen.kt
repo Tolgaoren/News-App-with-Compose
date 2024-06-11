@@ -54,13 +54,14 @@ fun NewsListScreen(
         SearchBar(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
+                .padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 4.dp),
             query = text,
             onQueryChange = {
                 text = it
             },
             onSearch = {
                 active = false
+                viewModel.searchNews(it)
                 text = ""
             },
             active = active,
