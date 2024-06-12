@@ -60,13 +60,14 @@ fun NewsListScreen(
                 text = it
             },
             onSearch = {
-                active = false
                 viewModel.searchNews(it)
-                text = ""
+                active = false
             },
             active = active,
             onActiveChange = {
-                active = it
+                if (text.isEmpty()) {
+                    active = it
+                }
             },
             placeholder = {
                 Text(text = "Search")

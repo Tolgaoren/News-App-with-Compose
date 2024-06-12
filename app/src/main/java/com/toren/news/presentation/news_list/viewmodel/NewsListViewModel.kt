@@ -45,7 +45,6 @@ class NewsListViewModel @Inject constructor(
 
     fun searchNews(query: String) {
         getQueryNewsUseCase(query).onEach { result ->
-            println(result)
             when (result) {
                 is Resource.Success -> {
                     _state.value = NewsListState(news = result.data ?: emptyList())

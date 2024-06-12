@@ -1,9 +1,7 @@
 package com.toren.news.data.remote.api
 
-import com.toren.news.common.Resource
 import com.toren.news.data.remote.dto.NewsDto
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface NewsApi {
