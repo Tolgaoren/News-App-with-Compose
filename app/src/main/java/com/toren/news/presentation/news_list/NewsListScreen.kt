@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -19,7 +20,6 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -71,7 +71,7 @@ fun NewsListScreen(
             active = active,
             onActiveChange = {
                 if (text.trim().isEmpty()) {
-                    active = it
+                    active = false
                 } else {
                     text = ""
                     active = false
@@ -117,7 +117,7 @@ fun NewsListScreen(
 
 
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyRow(modifier = Modifier.fillMaxSize()) {
             items(news.news) { news ->
                 NewsListItem(
                     news = news,
