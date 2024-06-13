@@ -60,8 +60,6 @@ fun NewsListScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
     ) {
 
         LazyColumn(
