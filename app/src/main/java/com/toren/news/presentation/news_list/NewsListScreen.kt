@@ -15,12 +15,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +44,7 @@ fun NewsListScreen(
     val news = viewModel.state.value
     var text by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
-
+    val searchHistory by viewModel.history.collectAsState()
 
     Column(
         modifier = Modifier
@@ -51,7 +53,7 @@ fun NewsListScreen(
             .navigationBarsPadding()
     ) {
 
-        SearchBar(
+        DockedSearchBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 4.dp),
@@ -60,13 +62,19 @@ fun NewsListScreen(
                 text = it
             },
             onSearch = {
-                viewModel.searchNews(it)
-                active = false
+                if (text.trim().isNotEmpty()) {
+                    viewModel.searchNews(it)
+                    viewModel.saveQuery(it)
+                    active = false
+                }
             },
             active = active,
             onActiveChange = {
-                if (text.isEmpty()) {
+                if (text.trim().isEmpty()) {
                     active = it
+                } else {
+                    text = ""
+                    active = false
                 }
             },
             placeholder = {
@@ -94,8 +102,21 @@ fun NewsListScreen(
                 }
             }
         ) {
-
+            searchHistory.forEach {
+                Text(
+                    text = it,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable {
+                            text = it
+                        },
+                )
+            }
         }
+
+
+
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(news.news) { news ->
                 NewsListItem(

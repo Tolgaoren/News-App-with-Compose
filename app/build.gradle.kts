@@ -82,5 +82,6 @@ dependencies {
     implementation (libs.androidx.hilt.navigation.compose)
     implementation (libs.compose)
     implementation (libs.threetenabp)
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
 }
