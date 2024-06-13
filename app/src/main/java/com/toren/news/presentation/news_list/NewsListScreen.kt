@@ -1,10 +1,14 @@
 package com.toren.news.presentation.news_list
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -12,8 +16,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DockedSearchBar
@@ -33,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.toren.news.presentation.news_list.components.NewsListItem
+import com.toren.news.presentation.news_list.components.NewsListItemHorizontal
 import com.toren.news.presentation.news_list.viewmodel.NewsListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +54,8 @@ fun NewsListScreen(
     var text by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     val searchHistory by viewModel.history.collectAsState()
+    val lazyListState = rememberLazyListState()
+    val snapBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
 
     Column(
         modifier = Modifier
@@ -52,7 +63,6 @@ fun NewsListScreen(
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-
         DockedSearchBar(
             modifier = Modifier
                 .fillMaxWidth()
@@ -70,11 +80,9 @@ fun NewsListScreen(
             },
             active = active,
             onActiveChange = {
-                if (text.trim().isEmpty()) {
-                    active = false
-                } else {
+                active = it
+                if (!active) {
                     text = ""
-                    active = false
                 }
             },
             placeholder = {
@@ -114,10 +122,49 @@ fun NewsListScreen(
                 )
             }
         }
+        Row (
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp
+                ),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Text(
+                text = "Top News",
+                style = MaterialTheme.typography.titleSmall
+            )
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null
+            )
+        }
+        Box (
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+            ) {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                state = lazyListState,
+                flingBehavior = snapBehavior
+            ) {
+                items(news.news) { news ->
+                    NewsListItemHorizontal(
+                        news = news,
+                        onItemClick = {
+                            println(it)
+                        }
+                    )
+                }
+            }
+        }
 
-
-
-        LazyRow(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(news.news) { news ->
                 NewsListItem(
                     news = news,
