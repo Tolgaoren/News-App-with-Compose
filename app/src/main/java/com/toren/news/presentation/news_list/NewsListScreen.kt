@@ -1,7 +1,6 @@
 package com.toren.news.presentation.news_list
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,13 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -51,11 +47,15 @@ fun NewsListScreen(
     viewModel: NewsListViewModel = hiltViewModel(),
 ) {
     val news = viewModel.state.value
+    val sportNews = viewModel.sport.value
     var text by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
     val searchHistory by viewModel.history.collectAsState()
-    val lazyListState = rememberLazyListState()
-    val snapBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState)
+    val columnState = rememberLazyListState()
+    val columnSnapBehavior = rememberSnapFlingBehavior(lazyListState = columnState)
+
+    val lazyRowState = rememberLazyListState()
+    val rowSnapBehavior = rememberSnapFlingBehavior(lazyListState = lazyRowState)
 
     Column(
         modifier = Modifier
@@ -63,109 +63,124 @@ fun NewsListScreen(
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        DockedSearchBar(
+
+        LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 4.dp),
-            query = text,
-            onQueryChange = {
-                text = it
-            },
-            onSearch = {
-                if (text.trim().isNotEmpty()) {
-                    viewModel.searchNews(it)
-                    viewModel.saveQuery(it)
-                    active = false
-                }
-            },
-            active = active,
-            onActiveChange = {
-                active = it
-                if (!active) {
-                    text = ""
-                }
-            },
-            placeholder = {
-                Text(text = "Search")
-            },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search Icon"
-                )
-            },
-            trailingIcon = {
-                if (active) {
-                    Icon(
-                        modifier = Modifier.clickable {
-                            if (text.isNotEmpty()) {
-                                text = ""
-                            } else {
-                                active = false
-                            }
-                        },
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close Icon"
-                    )
-                }
-            }
-        ) {
-            searchHistory.forEach {
-                Text(
-                    text = it,
+                .fillMaxSize(),
+            state = columnState,
+            flingBehavior = columnSnapBehavior
+            ) {
+
+            item {
+                DockedSearchBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                        .clickable {
-                            text = it
-                        },
-                )
-            }
-        }
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 8.dp
-                ),
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(
-                text = "Top News",
-                style = MaterialTheme.typography.titleSmall
-            )
-            Icon(
-                imageVector = Icons.Default.KeyboardArrowRight,
-                contentDescription = null
-            )
-        }
-        Box (
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-            ) {
-            LazyRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp),
-                state = lazyListState,
-                flingBehavior = snapBehavior
-            ) {
-                items(news.news) { news ->
-                    NewsListItemHorizontal(
-                        news = news,
-                        onItemClick = {
-                            println(it)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 4.dp, top = 4.dp),
+                    query = text,
+                    onQueryChange = {
+                        text = it
+                    },
+                    onSearch = {
+                        if (text.trim().isNotEmpty()) {
+                            viewModel.searchNews(it)
+                            viewModel.saveQuery(it)
+                            active = false
                         }
+                    },
+                    active = active,
+                    onActiveChange = {
+                        active = it
+                        if (!active) {
+                            text = ""
+                        }
+                    },
+                    placeholder = {
+                        Text(text = "Search")
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search Icon"
+                        )
+                    },
+                    trailingIcon = {
+                        if (active) {
+                            Icon(
+                                modifier = Modifier.clickable {
+                                    if (text.isNotEmpty()) {
+                                        text = ""
+                                    } else {
+                                        active = false
+                                    }
+                                },
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close Icon"
+                            )
+                        }
+                    }
+                ) {
+                    searchHistory.forEach {
+                        Text(
+                            text = it,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                                .clickable {
+                                    text = it
+                                },
+                        )
+                    }
+                }
+            }
+
+            item {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 8.dp
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Top News",
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = null
                     )
                 }
             }
-        }
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(news.news) { news ->
+            item {
+                Box (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                ) {
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp),
+                        state = lazyRowState,
+                        flingBehavior = rowSnapBehavior
+                    ) {
+                        items(news.news) { news ->
+                            NewsListItemHorizontal(
+                                news = news,
+                                onItemClick = {
+                                    navController.navigate(news)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            items(sportNews.news) { news ->
                 NewsListItem(
                     news = news,
                     onItemClick = {
@@ -175,17 +190,20 @@ fun NewsListScreen(
                 )
             }
         }
-        if (news.error.isNotBlank()) {
+        if (sportNews.error.isNotBlank()) {
             Text(
                 text = news.error, color = MaterialTheme.colorScheme.error,
                 modifier = Modifier
                     .fillMaxWidth()
             )
         }
-        if (news.isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        if (sportNews.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
                 CircularProgressIndicator(
-                    modifier = Modifier.width(64.dp),
+                    modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.secondary,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
